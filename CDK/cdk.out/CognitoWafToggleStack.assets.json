@@ -1,0 +1,32 @@
+{
+  "version": "36.0.0",
+  "files": {
+    "fe4f63a317fca348189dc1a6f2462cf2adce106328c5b52032f8ac4582ee68c4": {
+      "source": {
+        "path": "asset.fe4f63a317fca348189dc1a6f2462cf2adce106328c5b52032f8ac4582ee68c4",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "current_account-current_region": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "fe4f63a317fca348189dc1a6f2462cf2adce106328c5b52032f8ac4582ee68c4.zip",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    },
+    "d6900476a366af213e74c4c9d60c4eb0bc3e19110e608373a4fe099194fb6541": {
+      "source": {
+        "path": "CognitoWafToggleStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "current_account-current_region": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "d6900476a366af213e74c4c9d60c4eb0bc3e19110e608373a4fe099194fb6541.json",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

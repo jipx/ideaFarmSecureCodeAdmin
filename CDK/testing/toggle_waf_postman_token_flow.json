@@ -1,0 +1,107 @@
+{
+  "info": {
+    "name": "Toggle WAF API Test with Cognito Auth",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1\ufe0f\u20e3 Login (USER_PASSWORD_AUTH via Cognito)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/x-amz-json-1.1",
+            "type": "text"
+          },
+          {
+            "key": "X-Amz-Target",
+            "value": "AWSCognitoIdentityProviderService.InitiateAuth",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"AuthFlow\": \"USER_PASSWORD_AUTH\",\n  \"ClientId\": \"r54r5gl922l46r2s2ea6nh84b\",\n  \"AuthParameters\": {\n    \"USERNAME\": \"test@example.com\",\n    \"PASSWORD\": \"TestPassword123!\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://cognito-idp.ap-northeast-1.amazonaws.com/",
+          "protocol": "https",
+          "host": [
+            "cognito-idp",
+            "ap-northeast-1",
+            "amazonaws",
+            "com"
+          ],
+          "path": [
+            ""
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "if (jsonData.AuthenticationResult && jsonData.AuthenticationResult.IdToken) {",
+              "  pm.collectionVariables.set(\"IdToken\", jsonData.AuthenticationResult.IdToken);",
+              "  console.log(\"IdToken saved to collection variable.\");",
+              "} else {",
+              "  console.warn(\"No IdToken found in response.\");",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "2\ufe0f\u20e3 POST /toggle (Cognito Auth)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{IdToken}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://82tmqa6o96.execute-api.ap-northeast-1.amazonaws.com/prod/toggle",
+          "protocol": "https",
+          "host": [
+            "82tmqa6o96",
+            "execute-api",
+            "ap-northeast-1",
+            "amazonaws",
+            "com"
+          ],
+          "path": [
+            "prod",
+            "toggle"
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "app": "python app.py",
+  "context": {
+    "@aws-cdk/aws-apigateway:usagePlanKeyOrderInsensitiveId": true,
+    "@aws-cdk/aws-lambda:recognizeVersionProps": true,
+    "@aws-cdk/aws-cloudwatch:removeColonFromMetricDimensions": true
+  }
+}

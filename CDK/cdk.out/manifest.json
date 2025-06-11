@@ -1,0 +1,191 @@
+{
+  "version": "36.0.0",
+  "artifacts": {
+    "CognitoWafToggleStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "CognitoWafToggleStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "CognitoWafToggleStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://unknown-account/unknown-region",
+      "properties": {
+        "templateFile": "CognitoWafToggleStack.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/d6900476a366af213e74c4c9d60c4eb0bc3e19110e608373a4fe099194fb6541.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "CognitoWafToggleStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "CognitoWafToggleStack.assets"
+      ],
+      "metadata": {
+        "/CognitoWafToggleStack/ToggleUserPool/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ToggleUserPool00A7B737"
+          }
+        ],
+        "/CognitoWafToggleStack/ToggleUserPool/ToggleUserDomain/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ToggleUserPoolToggleUserDomain0F781839"
+          }
+        ],
+        "/CognitoWafToggleStack/ToggleUserClient/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ToggleUserClientC8AB33B0"
+          }
+        ],
+        "/CognitoWafToggleStack/DirectWafToggleLambda/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DirectWafToggleLambdaServiceRole71240B67"
+          }
+        ],
+        "/CognitoWafToggleStack/DirectWafToggleLambda/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DirectWafToggleLambdaServiceRoleDefaultPolicy45A8633E"
+          }
+        ],
+        "/CognitoWafToggleStack/DirectWafToggleLambda/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "DirectWafToggleLambda61F2F171"
+          }
+        ],
+        "/CognitoWafToggleStack/ToggleWafAPI/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ToggleWafAPIDDC003BA"
+          }
+        ],
+        "/CognitoWafToggleStack/ToggleWafAPI/CloudWatchRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ToggleWafAPICloudWatchRoleE05B700C"
+          }
+        ],
+        "/CognitoWafToggleStack/ToggleWafAPI/Account": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ToggleWafAPIAccountEE2AD153"
+          }
+        ],
+        "/CognitoWafToggleStack/ToggleWafAPI/Deployment/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ToggleWafAPIDeploymentF4416A4A1f48b1a03cc1a11a7d15a5f2877ed590"
+          }
+        ],
+        "/CognitoWafToggleStack/ToggleWafAPI/DeploymentStage.prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ToggleWafAPIDeploymentStageprod3521A7D3"
+          }
+        ],
+        "/CognitoWafToggleStack/ToggleWafAPI/Endpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ToggleWafAPIEndpoint5962869C"
+          }
+        ],
+        "/CognitoWafToggleStack/ToggleWafAPI/Default/toggle/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ToggleWafAPItoggleD10D18BA"
+          }
+        ],
+        "/CognitoWafToggleStack/ToggleWafAPI/Default/toggle/POST/ApiPermission.CognitoWafToggleStackToggleWafAPI0DF2199D.POST..toggle": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ToggleWafAPItogglePOSTApiPermissionCognitoWafToggleStackToggleWafAPI0DF2199DPOSTtoggleD009EF34"
+          }
+        ],
+        "/CognitoWafToggleStack/ToggleWafAPI/Default/toggle/POST/ApiPermission.Test.CognitoWafToggleStackToggleWafAPI0DF2199D.POST..toggle": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ToggleWafAPItogglePOSTApiPermissionTestCognitoWafToggleStackToggleWafAPI0DF2199DPOSTtoggle4ECAB234"
+          }
+        ],
+        "/CognitoWafToggleStack/ToggleWafAPI/Default/toggle/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ToggleWafAPItogglePOST00676681"
+          }
+        ],
+        "/CognitoWafToggleStack/CognitoAuthorizer/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CognitoAuthorizerF3215DBC"
+          }
+        ],
+        "/CognitoWafToggleStack/CognitoDomainURL": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CognitoDomainURL"
+          }
+        ],
+        "/CognitoWafToggleStack/CognitoClientId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CognitoClientId"
+          }
+        ],
+        "/CognitoWafToggleStack/WafToggleAPIURL": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "WafToggleAPIURL"
+          }
+        ],
+        "/CognitoWafToggleStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/CognitoWafToggleStack/CDKMetadata/Condition": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadataAvailable"
+          }
+        ],
+        "/CognitoWafToggleStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/CognitoWafToggleStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "CognitoWafToggleStack"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    }
+  }
+}

@@ -1,0 +1,783 @@
+{
+ "Resources": {
+  "ToggleUserPool00A7B737": {
+   "Type": "AWS::Cognito::UserPool",
+   "Properties": {
+    "AccountRecoverySetting": {
+     "RecoveryMechanisms": [
+      {
+       "Name": "verified_phone_number",
+       "Priority": 1
+      },
+      {
+       "Name": "verified_email",
+       "Priority": 2
+      }
+     ]
+    },
+    "AdminCreateUserConfig": {
+     "AllowAdminCreateUserOnly": true
+    },
+    "AutoVerifiedAttributes": [
+     "email"
+    ],
+    "EmailVerificationMessage": "The verification code to your new account is {####}",
+    "EmailVerificationSubject": "Verify your new account",
+    "SmsVerificationMessage": "The verification code to your new account is {####}",
+    "UsernameAttributes": [
+     "email"
+    ],
+    "VerificationMessageTemplate": {
+     "DefaultEmailOption": "CONFIRM_WITH_CODE",
+     "EmailMessage": "The verification code to your new account is {####}",
+     "EmailSubject": "Verify your new account",
+     "SmsMessage": "The verification code to your new account is {####}"
+    }
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "CognitoWafToggleStack/ToggleUserPool/Resource"
+   }
+  },
+  "ToggleUserPoolToggleUserDomain0F781839": {
+   "Type": "AWS::Cognito::UserPoolDomain",
+   "Properties": {
+    "Domain": "waf-toggle-ui-demo",
+    "UserPoolId": {
+     "Ref": "ToggleUserPool00A7B737"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CognitoWafToggleStack/ToggleUserPool/ToggleUserDomain/Resource"
+   }
+  },
+  "ToggleUserClientC8AB33B0": {
+   "Type": "AWS::Cognito::UserPoolClient",
+   "Properties": {
+    "AllowedOAuthFlows": [
+     "code"
+    ],
+    "AllowedOAuthFlowsUserPoolClient": true,
+    "AllowedOAuthScopes": [
+     "profile",
+     "phone",
+     "email",
+     "openid",
+     "aws.cognito.signin.user.admin"
+    ],
+    "CallbackURLs": [
+     "http://localhost:8501"
+    ],
+    "ExplicitAuthFlows": [
+     "ALLOW_USER_PASSWORD_AUTH",
+     "ALLOW_REFRESH_TOKEN_AUTH"
+    ],
+    "GenerateSecret": false,
+    "LogoutURLs": [
+     "http://localhost:8501"
+    ],
+    "SupportedIdentityProviders": [
+     "COGNITO"
+    ],
+    "UserPoolId": {
+     "Ref": "ToggleUserPool00A7B737"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CognitoWafToggleStack/ToggleUserClient/Resource"
+   }
+  },
+  "DirectWafToggleLambdaServiceRole71240B67": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CognitoWafToggleStack/DirectWafToggleLambda/ServiceRole/Resource"
+   }
+  },
+  "DirectWafToggleLambdaServiceRoleDefaultPolicy45A8633E": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "wafv2:ListWebACLs",
+        "wafv2:GetWebACL",
+        "wafv2:UpdateWebACL"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "DirectWafToggleLambdaServiceRoleDefaultPolicy45A8633E",
+    "Roles": [
+     {
+      "Ref": "DirectWafToggleLambdaServiceRole71240B67"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CognitoWafToggleStack/DirectWafToggleLambda/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "DirectWafToggleLambda61F2F171": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "fe4f63a317fca348189dc1a6f2462cf2adce106328c5b52032f8ac4582ee68c4.zip"
+    },
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "DirectWafToggleLambdaServiceRole71240B67",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.11",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "DirectWafToggleLambdaServiceRoleDefaultPolicy45A8633E",
+    "DirectWafToggleLambdaServiceRole71240B67"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CognitoWafToggleStack/DirectWafToggleLambda/Resource",
+    "aws:asset:path": "asset.fe4f63a317fca348189dc1a6f2462cf2adce106328c5b52032f8ac4582ee68c4",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "ToggleWafAPIDDC003BA": {
+   "Type": "AWS::ApiGateway::RestApi",
+   "Properties": {
+    "Name": "ToggleWafAPI"
+   },
+   "Metadata": {
+    "aws:cdk:path": "CognitoWafToggleStack/ToggleWafAPI/Resource"
+   }
+  },
+  "ToggleWafAPICloudWatchRoleE05B700C": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "apigateway.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+       ]
+      ]
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "CognitoWafToggleStack/ToggleWafAPI/CloudWatchRole/Resource"
+   }
+  },
+  "ToggleWafAPIAccountEE2AD153": {
+   "Type": "AWS::ApiGateway::Account",
+   "Properties": {
+    "CloudWatchRoleArn": {
+     "Fn::GetAtt": [
+      "ToggleWafAPICloudWatchRoleE05B700C",
+      "Arn"
+     ]
+    }
+   },
+   "DependsOn": [
+    "ToggleWafAPIDDC003BA"
+   ],
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "CognitoWafToggleStack/ToggleWafAPI/Account"
+   }
+  },
+  "ToggleWafAPIDeploymentF4416A4A1f48b1a03cc1a11a7d15a5f2877ed590": {
+   "Type": "AWS::ApiGateway::Deployment",
+   "Properties": {
+    "Description": "Automatically created by the RestApi construct",
+    "RestApiId": {
+     "Ref": "ToggleWafAPIDDC003BA"
+    }
+   },
+   "DependsOn": [
+    "ToggleWafAPItogglePOST00676681",
+    "ToggleWafAPItoggleD10D18BA"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CognitoWafToggleStack/ToggleWafAPI/Deployment/Resource"
+   }
+  },
+  "ToggleWafAPIDeploymentStageprod3521A7D3": {
+   "Type": "AWS::ApiGateway::Stage",
+   "Properties": {
+    "DeploymentId": {
+     "Ref": "ToggleWafAPIDeploymentF4416A4A1f48b1a03cc1a11a7d15a5f2877ed590"
+    },
+    "RestApiId": {
+     "Ref": "ToggleWafAPIDDC003BA"
+    },
+    "StageName": "prod"
+   },
+   "DependsOn": [
+    "ToggleWafAPIAccountEE2AD153"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CognitoWafToggleStack/ToggleWafAPI/DeploymentStage.prod/Resource"
+   }
+  },
+  "ToggleWafAPItoggleD10D18BA": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "ToggleWafAPIDDC003BA",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "toggle",
+    "RestApiId": {
+     "Ref": "ToggleWafAPIDDC003BA"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CognitoWafToggleStack/ToggleWafAPI/Default/toggle/Resource"
+   }
+  },
+  "ToggleWafAPItogglePOSTApiPermissionCognitoWafToggleStackToggleWafAPI0DF2199DPOSTtoggleD009EF34": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "DirectWafToggleLambda61F2F171",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:",
+       {
+        "Ref": "AWS::Region"
+       },
+       ":",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "ToggleWafAPIDDC003BA"
+       },
+       "/",
+       {
+        "Ref": "ToggleWafAPIDeploymentStageprod3521A7D3"
+       },
+       "/POST/toggle"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CognitoWafToggleStack/ToggleWafAPI/Default/toggle/POST/ApiPermission.CognitoWafToggleStackToggleWafAPI0DF2199D.POST..toggle"
+   }
+  },
+  "ToggleWafAPItogglePOSTApiPermissionTestCognitoWafToggleStackToggleWafAPI0DF2199DPOSTtoggle4ECAB234": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "DirectWafToggleLambda61F2F171",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:",
+       {
+        "Ref": "AWS::Region"
+       },
+       ":",
+       {
+        "Ref": "AWS::AccountId"
+       },
+       ":",
+       {
+        "Ref": "ToggleWafAPIDDC003BA"
+       },
+       "/test-invoke-stage/POST/toggle"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CognitoWafToggleStack/ToggleWafAPI/Default/toggle/POST/ApiPermission.Test.CognitoWafToggleStackToggleWafAPI0DF2199D.POST..toggle"
+   }
+  },
+  "ToggleWafAPItogglePOST00676681": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "CognitoAuthorizerF3215DBC"
+    },
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:",
+        {
+         "Ref": "AWS::Region"
+        },
+        ":lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "DirectWafToggleLambda61F2F171",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "ToggleWafAPItoggleD10D18BA"
+    },
+    "RestApiId": {
+     "Ref": "ToggleWafAPIDDC003BA"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CognitoWafToggleStack/ToggleWafAPI/Default/toggle/POST/Resource"
+   }
+  },
+  "CognitoAuthorizerF3215DBC": {
+   "Type": "AWS::ApiGateway::Authorizer",
+   "Properties": {
+    "IdentitySource": "method.request.header.Authorization",
+    "Name": "CognitoWafToggleStackCognitoAuthorizerB7F263B9",
+    "ProviderARNs": [
+     {
+      "Fn::GetAtt": [
+       "ToggleUserPool00A7B737",
+       "Arn"
+      ]
+     }
+    ],
+    "RestApiId": {
+     "Ref": "ToggleWafAPIDDC003BA"
+    },
+    "Type": "COGNITO_USER_POOLS"
+   },
+   "Metadata": {
+    "aws:cdk:path": "CognitoWafToggleStack/CognitoAuthorizer/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/1WQ3W6DMAyFn6X3adaOJ6BUu5uGqHZdpcGlHiFG2FHFEO8+EUrLrvwd2zr+edf7ZKd3G3PnrS3rrcOLHk5ibK3Mnc+DpcqjkB6+GbqcyKns6p+8wJEag35demQWmTkEL+uGOTMqZ5pLafTwEbwVpGiy5hy6BpmR/KjQNHooyMFUiDEnh7aPfZFGxcnZMIOwTqegONGHYGuQg2FQpsXKCNxNr4cCWNIWo9cLU2speFFHaB31zWPrlTqJqeICMxTAFDoL0X4RD8+ZP0FuVE6pheafLp/gNMiNOvyFLi7wVOP4MozHTBPRV1PXV5A2yL852dVn5EuU+Ku8lxv5t0TvE51sfhhx2wUv2IAu5vgHsaGxtPsBAAA="
+   },
+   "Metadata": {
+    "aws:cdk:path": "CognitoWafToggleStack/CDKMetadata/Default"
+   },
+   "Condition": "CDKMetadataAvailable"
+  }
+ },
+ "Outputs": {
+  "ToggleWafAPIEndpoint5962869C": {
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "ToggleWafAPIDDC003BA"
+      },
+      ".execute-api.",
+      {
+       "Ref": "AWS::Region"
+      },
+      ".",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "ToggleWafAPIDeploymentStageprod3521A7D3"
+      },
+      "/"
+     ]
+    ]
+   }
+  },
+  "CognitoDomainURL": {
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "ToggleUserPoolToggleUserDomain0F781839"
+      },
+      ".auth.",
+      {
+       "Ref": "AWS::Region"
+      },
+      ".amazoncognito.com"
+     ]
+    ]
+   }
+  },
+  "CognitoClientId": {
+   "Value": {
+    "Ref": "ToggleUserClientC8AB33B0"
+   }
+  },
+  "WafToggleAPIURL": {
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "ToggleWafAPIDDC003BA"
+      },
+      ".execute-api.",
+      {
+       "Ref": "AWS::Region"
+      },
+      ".",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "ToggleWafAPIDeploymentStageprod3521A7D3"
+      },
+      "/"
+     ]
+    ]
+   }
+  }
+ },
+ "Conditions": {
+  "CDKMetadataAvailable": {
+   "Fn::Or": [
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "af-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ca-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "cn-north-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "cn-northwest-1"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-north-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-3"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "il-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "me-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "me-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "sa-east-1"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-east-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-west-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-west-2"
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}
