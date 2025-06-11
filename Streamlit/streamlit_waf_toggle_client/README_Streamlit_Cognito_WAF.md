@@ -99,6 +99,10 @@ Clicking **Logout** will:
 
 ---
 
+![alt text](image.png)
+https://awskarthik82.medium.com/part-1-securing-aws-api-gateway-using-aws-cognito-oauth2-scopes-410e7fb4a4c0
+
+
 ## 📜 License
 
 MIT
