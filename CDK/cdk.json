@@ -3,6 +3,10 @@
   "context": {
     "@aws-cdk/aws-apigateway:usagePlanKeyOrderInsensitiveId": true,
     "@aws-cdk/aws-lambda:recognizeVersionProps": true,
-    "@aws-cdk/aws-cloudwatch:removeColonFromMetricDimensions": true
+    "@aws-cdk/aws-cloudwatch:removeColonFromMetricDimensions": true,
+    "cognitoCallbackUrl-local": "http://localhost:8501",
+    "cognitoLogoutUrl_local": "http://localhost:8501",
+    "cognitoCallbackUrl": "https://ideafarmsecurecodeapp-rtjdxcdwa2xeitajujvsx7.streamlit.app/",
+    "cognitoLogoutUrl": "https://ideafarmsecurecodeapp-rtjdxcdwa2xeitajujvsx7.streamlit.app/"
   }
 }

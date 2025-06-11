@@ -6,6 +6,9 @@ import datetime
 st.set_page_config(page_title="Toggle WAF", layout="centered")
 st.title("🛡️ Toggle WAF Protection")
 
+# Link to lecture website
+st.markdown("[🎓 Visit Secure Coding Lecture Site](https://ideafarmsecurecodelecurer-msvvnu2kbu98s6hyrmtkkm.streamlit.app/)")
+
 # --- 1. Ensure user is authenticated ---
 if "id_token" not in st.session_state:
     st.warning("You must be logged in to access this page.")

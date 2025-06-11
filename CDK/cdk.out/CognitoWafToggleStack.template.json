@@ -67,7 +67,7 @@
      "aws.cognito.signin.user.admin"
     ],
     "CallbackURLs": [
-     "http://localhost:8501"
+     "https://ideafarmsecurecodeapp-rtjdxcdwa2xeitajujvsx7.streamlit.app/"
     ],
     "ExplicitAuthFlows": [
      "ALLOW_USER_PASSWORD_AUTH",
@@ -75,7 +75,7 @@
     ],
     "GenerateSecret": false,
     "LogoutURLs": [
-     "http://localhost:8501"
+     "https://ideafarmsecurecodeapp-rtjdxcdwa2xeitajujvsx7.streamlit.app/"
     ],
     "SupportedIdentityProviders": [
      "COGNITO"

@@ -14,7 +14,7 @@
         }
       }
     },
-    "d6900476a366af213e74c4c9d60c4eb0bc3e19110e608373a4fe099194fb6541": {
+    "a43fed1cd4a89a8670c257910aae055a8d64225ab5afd56045f089245e2292ad": {
       "source": {
         "path": "CognitoWafToggleStack.template.json",
         "packaging": "file"
@@ -22,7 +22,7 @@
       "destinations": {
         "current_account-current_region": {
           "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
-          "objectKey": "d6900476a366af213e74c4c9d60c4eb0bc3e19110e608373a4fe099194fb6541.json",
+          "objectKey": "a43fed1cd4a89a8670c257910aae055a8d64225ab5afd56045f089245e2292ad.json",
           "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
         }
       }

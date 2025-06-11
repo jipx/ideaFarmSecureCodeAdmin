@@ -12,6 +12,10 @@ class CognitoWafToggleStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, **kwargs):
         super().__init__(scope, construct_id, **kwargs)
 
+        # Get values from cdk.json context
+        callback_url = self.node.try_get_context("cognitoCallbackUrl") or "http://localhost:8501"
+        logout_url = self.node.try_get_context("cognitoLogoutUrl") or "http://localhost:8501"
+
         # Cognito User Pool
         user_pool = cognito.UserPool(self, "ToggleUserPool",
             sign_in_aliases=cognito.SignInAliases(email=True),
@@ -25,15 +29,15 @@ class CognitoWafToggleStack(Stack):
             auth_flows=cognito.AuthFlow(user_password=True),
             o_auth=cognito.OAuthSettings(
                 flows=cognito.OAuthFlows(authorization_code_grant=True),
-                callback_urls=["http://localhost:8501"],
-                logout_urls=["http://localhost:8501"]
+                callback_urls=[callback_url],
+                logout_urls=[logout_url]
             )
         )
 
         # Cognito Domain for Hosted UI (must be globally unique)
         user_pool_domain = user_pool.add_domain("ToggleUserDomain",
             cognito_domain=cognito.CognitoDomainOptions(
-                domain_prefix="waf-toggle-ui-demo"  # <--- change if taken
+                domain_prefix="waf-toggle-ui-demo"
             )
         )
 
